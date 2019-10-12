@@ -1,5 +1,11 @@
 # Tic-tac-toe
 
+## To run
+
+```
+python3 tic-tac-toe.py
+```
+
 ## Goal
 
 The goal for this project is to create an un-beatable tic-tac-toe game.
