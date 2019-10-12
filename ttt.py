@@ -105,14 +105,43 @@ def twoInARow(board):
             count_o = sum(1 for i in row if i == "o")
             count_n = sum(1 for i in row if i == " ")
             if count_n == 1 and (count_x == 2 or count_o == 2):
-                # hit, get the coords 
+                # hit, get the coords (invert the row to get accurate coords)
                 x = row[::-1].index(" ")
                 coords = [x, y]
                     
-    # Diagonals
+    # Diagonal: starting top left corner
     if not coords:
-        print("")
+        top = board[0][0]
+        middle = board[1][1]
+        bottom = board[2][2]
 
+        if top is not " " and top == middle:
+            # bottom
+            coords = [2,2]
+        if middle is not " " and middle == bottom:
+            # top
+            coords = [0,0]
+        elif bottom is not " " and top == bottom:
+            # middle
+            coords = [1,1]
+
+    # Diagonal: tarting top right corner
+    if not coords:
+        top = board[0][2]
+        middle = board[1][1]
+        bottom = board[2][0]
+
+        if top is not " " and top == middle:
+            # bottom
+            coords = [2,0]
+        if middle is not " " and middle == bottom:
+            # top
+            coords = [0,2]
+        elif	bottom is not " " and top == bottom:
+            # middle
+            coords = [1,1]
+
+    # Done
     return coords
 
 
@@ -144,6 +173,8 @@ def main():
         printBoard(board)
         gameResult(board)
     except KeyboardInterrupt:
+        print("\nAlright, quitter....")
+    except EOFError:
         print("\nAlright, quitter....")
     
 
