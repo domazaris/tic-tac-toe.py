@@ -9,7 +9,7 @@ def printBoard(board):
         rows.append("|".join(row))
     print("\n-+-+-\n".join(rows))
 
-    
+
 def threeInARow(board, player):
     """ Return true if three of a kind are in a row """
     result = False
@@ -22,7 +22,7 @@ def threeInARow(board, player):
 
     result |= player == board[0][0] == board[1][1] == board[2][2]
     result |= player == board[0][2] == board[1][1] == board[2][0]
-        
+
     return result
 
 
@@ -69,7 +69,7 @@ def userTurn(board):
                 try:
                     x = int(turn[0])
                     y = int(turn[1])
-                    if x >= 0 and x <= 2 and y >=0 and y <= 2:
+                    if x >= 0 and x <= 2 and y >= 0 and y <= 2:
                         coords = [x, y]
                         if board[x][y] is not " ":
                             print("Space is already taken")
@@ -80,6 +80,7 @@ def userTurn(board):
                         print("Invalid input")
                 except ValueError:
                     pass
+
 
 def twoInARow(board):
     """ Check if there is an opportunity to win. If yes, return winning coords """
@@ -108,7 +109,7 @@ def twoInARow(board):
                 # hit, get the coords (invert the row to get accurate coords)
                 x = row[::-1].index(" ")
                 coords = [x, y]
-                    
+
     # Diagonal: starting top left corner
     if not coords:
         top = board[0][0]
@@ -117,13 +118,13 @@ def twoInARow(board):
 
         if top is not " " and top == middle:
             # bottom
-            coords = [2,2]
+            coords = [2, 2]
         if middle is not " " and middle == bottom:
             # top
-            coords = [0,0]
+            coords = [0, 0]
         elif bottom is not " " and top == bottom:
             # middle
-            coords = [1,1]
+            coords = [1, 1]
 
     # Diagonal: tarting top right corner
     if not coords:
@@ -133,21 +134,23 @@ def twoInARow(board):
 
         if top is not " " and top == middle:
             # bottom
-            coords = [2,0]
+            coords = [2, 0]
         if middle is not " " and middle == bottom:
             # top
-            coords = [0,2]
-        elif	bottom is not " " and top == bottom:
+            coords = [0, 2]
+        elif bottom is not " " and top == bottom:
             # middle
-            coords = [1,1]
+            coords = [1, 1]
 
     # Done
     return coords
+
 
 def findFork(board):
     """ Return the locations of a potential fork (or None) """
     coords = None
     return coords
+
 
 def cpuTurn(board):
     """ CPU turn in the game """
@@ -162,7 +165,7 @@ def cpuTurn(board):
     if coords:
         board[coords[0]][coords[1]] = "x"
         return
-    
+
     # Center:
     # Opp Corner:
     # Empty Corner:
@@ -174,7 +177,7 @@ def cpuTurn(board):
             if board[x][y] == " ":
                 board[x][y] = "x"
                 return
-        
+
 
 def main():
     """ """
@@ -192,7 +195,7 @@ def main():
         print("\nAlright, quitter....")
     except EOFError:
         print("\nAlright, quitter....")
-    
+
 
 if __name__ == "__main__":
     main()
