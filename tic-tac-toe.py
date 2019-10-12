@@ -180,7 +180,7 @@ def cpuTurn(board):
 
 
 def main():
-    """ """
+    """ Main function """
     try:
         board = newBoard()
         while not gameOver(board):
