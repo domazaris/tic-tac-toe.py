@@ -144,6 +144,10 @@ def twoInARow(board):
     # Done
     return coords
 
+def findFork(board):
+    """ Return the locations of a potential fork (or None) """
+    coords = None
+    return coords
 
 def cpuTurn(board):
     """ CPU turn in the game """
@@ -154,11 +158,23 @@ def cpuTurn(board):
         return
 
     # Fork or Block Fork:
+    coords = findFork(board)
+    if coords:
+        board[coords[0]][coords[1]] = "x"
+        return
+    
     # Center:
     # Opp Corner:
     # Empty Corner:
-    # Empty Side: 
+    # Empty Side:
 
+    # Failure case (shouldn't get here)
+    for x in range(3):
+        for y in range(3):
+            if board[x][y] == " ":
+                board[x][y] = "x"
+                return
+        
 
 def main():
     """ """
