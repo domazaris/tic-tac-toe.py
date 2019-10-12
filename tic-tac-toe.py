@@ -53,14 +53,15 @@ def gameResult(board):
 def newBoard():
     """ Return a blank board """
     return [
-        [" ", " ", " "],
-        [" ", " ", " "],
-        [" ", " ", " "]
+        ["x", " ", " "],
+        [" ", "o", " "],
+        [" ", " ", "x"]
     ]
 
 
 def userTurn(board):
     """ Get user input, then place """
+    printBoard(board)
     while True:
         turn = input("Your move. Place in coords of a position e.g. 0,0: ")
         if turn:
@@ -145,11 +146,42 @@ def twoInARow(board):
     # Done
     return coords
 
+def isCorner(x, y):
+    """ Return true if corner """
+    return x != 1 and y != 1
+
 
 def findFork(board):
     """ Return the locations of a potential fork (or None) """
-    coords = None
-    return coords
+    for row in range(3):
+        for col in range(3):
+            count = 0
+            cell = board[row][col]
+            
+            if cell == " ":
+                # Check row
+                count_x = sum(1 for i in board[row] if i == "x")
+                count_o = sum(1 for i in board[row] if i == "o")
+                count_n = sum(1 for i in board[row] if i == " ")
+                if count_n == 2 and (count_x == 1 or count_o == 1):
+                    count += 1
+
+                # Check col
+                column = [board[0][col], board[1][col], board[2][col]]
+                count_x = sum(1 for i in column if i == "x")
+                count_o = sum(1 for i in column if i == "o")
+                count_n = sum(1 for i in column if i == " ")
+                if count_n == 2	and (count_x == 1 or count_o == 1):
+                    count += 1
+
+                # Check diagonal (if possible)
+                if isCorner(row, col):
+                    pass
+
+                if count >= 2:
+                    return [row, col]
+
+    return None
 
 
 def cpuTurn(board):
@@ -183,11 +215,12 @@ def main():
     """ Main function """
     try:
         board = newBoard()
+        # players = [userTurn, cpuTurn]
+        players = [cpuTurn, userTurn]
         while not gameOver(board):
-            printBoard(board)
-            userTurn(board)
+            players[0](board)
             if not gameOver(board):
-                cpuTurn(board)
+                players[1](board)
 
         printBoard(board)
         gameResult(board)
