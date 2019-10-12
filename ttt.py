@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" Just a fun game of tic tac toe """
 
 
 def printBoard(board):
@@ -8,17 +9,22 @@ def printBoard(board):
         rows.append("|".join(row))
     print("\n-+-+-\n".join(rows))
 
+    
 def threeInARow(board, player):
     """ Return true if three of a kind are in a row """
     result = False
     for idx in range(3):
         # Check rows
-        result |= board[idx][0] == board[idx][1] == board[idx][2] == player
+        result |= player == board[idx][0] == board[idx][1] == board[idx][2]
 
         # Check colums
-        result |= board[0][idx] == board[1][idx] == board[2][idx] == player
+        result |= player == board[0][idx] == board[1][idx] == board[2][idx]
 
+    result |= player == board[0][0] == board[1][1] == board[2][2]
+    result |= player == board[0][2] == board[1][1] == board[2][0]
+        
     return result
+
 
 def fullBoard(board):
     """ Return true if board is full (draw)"""
@@ -27,6 +33,7 @@ def fullBoard(board):
             if cell == " ":
                 return False
     return True
+
 
 def gameOver(board):
     """ Return true if game over """
@@ -51,6 +58,7 @@ def newBoard():
         [" ", " ", " "]
     ]
 
+
 def userTurn(board):
     """ Get user input, then place """
     while True:
@@ -73,10 +81,56 @@ def userTurn(board):
                 except ValueError:
                     pass
 
+def twoInARow(board):
+    """ Check if there is an opportunity to win. If yes, return winning coords """
+    coords = None
+
+    # Rows / Columns (rotate for column check
+    for x in range(3):
+        row = board[x]
+        count_x = sum(1 for i in row if i == "x")
+        count_o = sum(1 for i in row if i == "o")
+        count_n = sum(1 for i in row if i == " ")
+        if count_n == 1 and (count_x == 2 or count_o == 2):
+            # hit, get the coords
+            y = row.index(" ")
+            coords = [x, y]
+
+    # Columns - rotate the board
+    if not coords:
+        rotated_board = list(zip(*board[::-1]))
+        for y in range(3):
+            row = rotated_board[y]
+            count_x = sum(1 for i in row if i == "x")
+            count_o = sum(1 for i in row if i == "o")
+            count_n = sum(1 for i in row if i == " ")
+            if count_n == 1 and (count_x == 2 or count_o == 2):
+                # hit, get the coords 
+                x = row[::-1].index(" ")
+                coords = [x, y]
+                    
+    # Diagonals
+    if not coords:
+        print("")
+
+    return coords
+
+
 def cpuTurn(board):
     """ CPU turn in the game """
-    return
-    
+    # Win or block: Check for 2 in a row
+    coords = twoInARow(board)
+    if coords:
+        board[coords[0]][coords[1]] = "x"
+        return
+
+    # Fork or Block Fork:
+    # Center:
+    # Opp Corner:
+    # Empty Corner:
+    # Empty Side: 
+
+
 def main():
     """ """
     try:
