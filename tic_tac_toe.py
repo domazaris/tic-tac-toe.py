@@ -189,6 +189,7 @@ def find_fork(board):
                     if count_n == 2 and count_x == 1:
                         x_fork_count += 1
 
+                # TODO: if multiple forks oppotunities, go on the offensive
                 if x_fork_count >= 2 or o_fork_count >= 2:
                     return [row, col]
 
