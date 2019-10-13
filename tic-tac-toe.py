@@ -53,9 +53,9 @@ def gameResult(board):
 def newBoard():
     """ Return a blank board """
     return [
-        ["o", " ", " "],
-        ["x", " ", "o"],
-        ["o", " ", " "]
+        [" ", " ", " "],
+        [" ", " ", " "],
+        [" ", " ", " "]
     ]
 
 
@@ -198,39 +198,77 @@ def findFork(board):
     return None
 
 
+def findEmptyMiddle(board):
+    """ Returns middle coords if empty """
+    if board[1][1] == " ":
+        return [1, 1]
+    else:
+        return None
+
+
+def findOppositeCorner(board):
+    """ Returns coordinates if there is a blank opposite corner """
+    if board[0][0] == "o" and board[2][2] == " ":
+        return [2, 2]
+    elif board[0][2] == "o" and board[2][0] == " ":
+        return [2, 0]
+    elif board[2][0] == "o" and board[0][2] == " ":
+        return [0, 2]
+    elif board[2][2] == "o" and board[0][0] == " ":
+        return [0, 0]
+    else:
+        return None
+        
+
+def findEmptyCorner(board):
+    """ Return coords of first empty corner """
+    if board[0][0] == " ":
+        return [0, 0]
+    elif board[0][2] == " ":
+        return [0, 2]
+    elif board[2][0] == " ":
+        return [2, 0]
+    elif board[2][2] == " ":
+        return [2, 2]
+    else:
+        return None
+
+
+def findEmptySide(board):
+    """ Return coords of first found empty side """
+    if board[0][1] == " ":
+        return [0, 1]
+    elif board[1][0] == " ":
+        return [1, 0]
+    elif board[1][2] == " ":
+        return [1, 2]
+    elif board[2][1] == " ":
+        return [2,1]
+    else:
+        return None
+    
+
 def cpuTurn(board):
     """ CPU turn in the game """
-    # Win or block: Check for 2 in a row
-    coords = twoInARow(board)
-    if coords:
-        board[coords[0]][coords[1]] = "x"
-        return
+    moves = [twoInARow, findFork, findEmptyMiddle, findOppositeCorner, findEmptyCorner, findEmptySide]
 
-    # Fork or Block Fork:
-    coords = findFork(board)
-    if coords:
-        board[coords[0]][coords[1]] = "x"
-        return
+    for move in moves:
+        coords = move(board)
+        if coords:
+            board[coords[0]][coords[1]] = "x"
+            return
 
-    # Center:
-    # Opp Corner:
-    # Empty Corner:
-    # Empty Side:
-
-    # Failure case (shouldn't get here)
-    for x in range(3):
-        for y in range(3):
-            if board[x][y] == " ":
-                board[x][y] = "x"
-                return
-
+    # If we get here, something went wrong
+    print("Uh-oh, the game broke! I refuse to lose this")
+    exit(0)
 
 def main():
     """ Main function """
     try:
         board = newBoard()
-        # players = [userTurn, cpuTurn]
-        players = [cpuTurn, userTurn]
+        players = [userTurn, cpuTurn]
+        random.shuffle(players)
+
         while not gameOver(board):
             players[0](board)
             if not gameOver(board):
