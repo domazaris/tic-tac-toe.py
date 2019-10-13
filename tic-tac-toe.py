@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """ Just a fun game of tic tac toe """
 
+import random
+
 
 def printBoard(board):
     """ Print the game board """
