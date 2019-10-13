@@ -71,14 +71,13 @@ def user_turn(board):
             turn = turn.split(',')
             if len(turn) == 2:
                 try:
-                    x = int(turn[0])
-                    y = int(turn[1])
-                    if x >= 0 and x <= 2 and y >= 0 and y <= 2:
-                        coords = [x, y]
-                        if board[x][y] != " ":
+                    row = int(turn[0])
+                    col = int(turn[1])
+                    if 2 >= row >= 0 and 2 >= col >= 0:
+                        if board[row][col] != " ":
                             print("Space is already taken")
                         else:
-                            board[x][y] = "o"
+                            board[row][col] = "o"
                             return
                     else:
                         print("Invalid input")
@@ -99,28 +98,27 @@ def two_in_a_row(board):
     coords = None
 
     # Rows / Columns (rotate for column check
-    for x in range(3):
-        row = board[x]
+    for row_idx in range(3):
+        row = board[row_idx]
         count_x = sum(1 for i in row if i == "x")
         count_o = sum(1 for i in row if i == "o")
         count_n = sum(1 for i in row if i == " ")
         if count_n == 1 and (count_x == 2 or count_o == 2):
             # hit, get the coords
-            y = row.index(" ")
-            coords = [x, y]
+            col_idx = row.index(" ")
+            coords = [row_idx, col_idx]
 
-    # Columns - rotate the board
+    # Columns
     if not coords:
-        rotated_board = list(zip(*board[::-1]))
-        for y in range(3):
-            column = get_column(board, y)
+        for col_idx in range(3):
+            column = get_column(board, col_idx)
             count_x = sum(1 for i in column if i == "x")
             count_o = sum(1 for i in column if i == "o")
             count_n = sum(1 for i in column if i == " ")
             if count_n == 1 and (count_x == 2 or count_o == 2):
                 # hit, get the coords (invert the row to get accurate coords)
-                x = column.index(" ")
-                coords = [x, y]
+                row_idx = column.index(" ")
+                coords = [row_idx, col_idx]
 
     # Diagonal: starting top left corner
     if not coords:
@@ -159,17 +157,18 @@ def two_in_a_row(board):
     return coords
 
 
-def is_corner(x, y):
+def is_corner(row, col):
     """ Return true if corner """
-    return x != 1 and y != 1
+    return row != 1 and col != 1
 
 
 def get_diagonal(board, row, col):
     """ Return a list of a diagonal row, starting from the given coords """
     if [row, col] == [0, 0] or [row, col] == [2, 2]:
         return [board[0][0], board[1][1], board[2][2]]
-    elif [row, col] == [0, 2] or [row, col] == [2, 0]:
+    if [row, col] == [0, 2] or [row, col] == [2, 0]:
         return [board[0][2], board[1][1], board[2][0]]
+    return None
 
 
 def find_fork(board):
@@ -206,50 +205,46 @@ def find_empty_middle(board):
     """ Returns middle coords if empty """
     if board[1][1] == " ":
         return [1, 1]
-    else:
-        return None
+    return None
 
 
 def find_opposite_corner(board):
     """ Returns coordinates if there is a blank opposite corner """
     if board[0][0] == "o" and board[2][2] == " ":
         return [2, 2]
-    elif board[0][2] == "o" and board[2][0] == " ":
+    if board[0][2] == "o" and board[2][0] == " ":
         return [2, 0]
-    elif board[2][0] == "o" and board[0][2] == " ":
+    if board[2][0] == "o" and board[0][2] == " ":
         return [0, 2]
-    elif board[2][2] == "o" and board[0][0] == " ":
+    if board[2][2] == "o" and board[0][0] == " ":
         return [0, 0]
-    else:
-        return None
+    return None
 
 
 def find_empty_corner(board):
     """ Return coords of first empty corner """
     if board[0][0] == " ":
         return [0, 0]
-    elif board[0][2] == " ":
+    if board[0][2] == " ":
         return [0, 2]
-    elif board[2][0] == " ":
+    if board[2][0] == " ":
         return [2, 0]
-    elif board[2][2] == " ":
+    if board[2][2] == " ":
         return [2, 2]
-    else:
-        return None
+    return None
 
 
 def find_empty_side(board):
     """ Return coords of first found empty side """
     if board[0][1] == " ":
         return [0, 1]
-    elif board[1][0] == " ":
+    if board[1][0] == " ":
         return [1, 0]
-    elif board[1][2] == " ":
+    if board[1][2] == " ":
         return [1, 2]
-    elif board[2][1] == " ":
+    if board[2][1] == " ":
         return [2, 1]
-    else:
-        return None
+    return None
 
 
 def cpu_turn(board):
