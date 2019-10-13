@@ -62,27 +62,35 @@ def new_board():
     ]
 
 
+def get_user_input():
+    """ Returns user input or None for invalid input """
+    turn = input("Your move. Place in coords of a position e.g. 0,0: ")
+    if turn:
+        turn = turn.split(',')
+        if len(turn) == 2:
+            try:
+                return [int(turn[0]), int(turn[1])]
+            except:
+                pass
+    return None
+
+
 def user_turn(board):
     """ Get user input, then place """
     print_board(board)
     while True:
-        turn = input("Your move. Place in coords of a position e.g. 0,0: ")
-        if turn:
-            turn = turn.split(',')
-            if len(turn) == 2:
-                try:
-                    row = int(turn[0])
-                    col = int(turn[1])
-                    if 2 >= row >= 0 and 2 >= col >= 0:
-                        if board[row][col] != " ":
-                            print("Space is already taken")
-                        else:
-                            board[row][col] = "o"
-                            return
-                    else:
-                        print("Invalid input")
-                except ValueError:
-                    pass
+        coords = get_user_input()
+        if coords:
+            row = coords[0]
+            col = coords[1]
+            if 2 >= row >= 0 and 2 >= col >= 0:
+                if board[row][col] != " ":
+                    print("Space is already taken")
+                else:
+                    board[row][col] = "o"
+                    return
+            else:
+                print("Invalid input")
 
 
 def get_column(board, col):
