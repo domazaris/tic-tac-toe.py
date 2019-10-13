@@ -3,7 +3,7 @@
 ## To run
 
 ```
-python3 tic-tac-toe.py
+python3 tic_tac_toe.py
 ```
 
 ## Goal
