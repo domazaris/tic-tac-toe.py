@@ -70,7 +70,7 @@ def get_user_input():
         if len(turn) == 2:
             try:
                 return [int(turn[0]), int(turn[1])]
-            except:
+            except ValueError:
                 pass
     return None
 
@@ -128,38 +128,21 @@ def two_in_a_row(board):
                 row_idx = column.index(" ")
                 coords = [row_idx, col_idx]
 
-    # Diagonal: starting top left corner
-    if not coords:
-        top = board[0][0]
-        middle = board[1][1]
-        bottom = board[2][2]
+    # Diagonals
+    tops = [[0, 0], [0, 2]]
+    for top in tops:
+        if not coords:
+            diagonal = get_diagonal(board, top[0], top[1])
+            top = diagonal[0]
+            middle = diagonal[1]
+            bottom = diagonal[2]
 
-        if bottom == " " and top != " " and top == middle:
-            # bottom
-            coords = [2, 2]
-        elif top == " " and middle != " " and middle == bottom:
-            # top
-            coords = [0, 0]
-        elif middle == " " and bottom != " " and top == bottom:
-            # middle
-            coords = [1, 1]
-            print(coords)
-
-    # Diagonal: tarting top right corner
-    if not coords:
-        top = board[0][2]
-        middle = board[1][1]
-        bottom = board[2][0]
-
-        if bottom == " " and top != " " and top == middle:
-            # bottom
-            coords = [2, 0]
-        elif top == " " and middle != " " and middle == bottom:
-            # top
-            coords = [0, 2]
-        elif middle == " " and bottom != " " and top == bottom:
-            # middle
-            coords = [1, 1]
+            if bottom == " " and top != " " and top == middle:
+                coords = [2, 2] if top == [0, 0] else [2, 0]
+            elif top == " " and middle != " " and middle == bottom:
+                coords = [0, 0]	if top == [0, 0] else [0, 2]
+            elif middle == " " and bottom != " " and top == bottom:
+                coords = [1, 1]
 
     # Done
     return coords
