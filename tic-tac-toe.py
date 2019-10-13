@@ -150,12 +150,13 @@ def twoInARow(board):
         elif top is " " and middle is not " " and middle == bottom:
             # top
             coords = [0, 2]
-        elif  middle is " " and bottom is not " " and top == bottom:
+        elif middle is " " and bottom is not " " and top == bottom:
             # middle
             coords = [1, 1]
 
     # Done
     return coords
+
 
 def isCorner(x, y):
     """ Return true if corner """
@@ -164,9 +165,9 @@ def isCorner(x, y):
 
 def getDiagonal(board, row, col):
     """ Return a list of a diagonal row, starting from the given coords """
-    if [row, col] == [0,0] or [row, col] == [2, 2]:
+    if [row, col] == [0, 0] or [row, col] == [2, 2]:
         return [board[0][0], board[1][1], board[2][2]]
-    elif [row, col] == [0,2] or [row, col] == [2, 0]:
+    elif [row, col] == [0, 2] or [row, col] == [2, 0]:
         return [board[0][2], board[1][1], board[2][0]]
 
 
@@ -177,7 +178,7 @@ def findFork(board):
             x_fork_count = 0
             o_fork_count = 0
             cell = board[row][col]
-            
+
             if cell == " ":
                 axes = [board[row], getColumn(board, col)]
                 if isCorner(row, col):
@@ -220,7 +221,7 @@ def findOppositeCorner(board):
         return [0, 0]
     else:
         return None
-        
+
 
 def findEmptyCorner(board):
     """ Return coords of first empty corner """
@@ -245,14 +246,15 @@ def findEmptySide(board):
     elif board[1][2] == " ":
         return [1, 2]
     elif board[2][1] == " ":
-        return [2,1]
+        return [2, 1]
     else:
         return None
-    
+
 
 def cpuTurn(board):
     """ CPU turn in the game """
-    moves = [twoInARow, findFork, findEmptyMiddle, findOppositeCorner, findEmptyCorner, findEmptySide]
+    moves = [twoInARow, findFork, findEmptyMiddle,
+             findOppositeCorner, findEmptyCorner, findEmptySide]
 
     for move in moves:
         coords = move(board)
@@ -263,6 +265,7 @@ def cpuTurn(board):
     # If we get here, something went wrong
     print("Uh-oh, the game broke! I refuse to lose this")
     exit(0)
+
 
 def main():
     """ Main function """
