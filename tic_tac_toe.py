@@ -75,7 +75,7 @@ def user_turn(board):
                     y = int(turn[1])
                     if x >= 0 and x <= 2 and y >= 0 and y <= 2:
                         coords = [x, y]
-                        if board[x][y] is not " ":
+                        if board[x][y] != " ":
                             print("Space is already taken")
                         else:
                             board[x][y] = "o"
@@ -128,13 +128,13 @@ def two_in_a_row(board):
         middle = board[1][1]
         bottom = board[2][2]
 
-        if bottom is " " and top is not " " and top == middle:
+        if bottom == " " and top != " " and top == middle:
             # bottom
             coords = [2, 2]
-        elif top is " " and middle is not " " and middle == bottom:
+        elif top == " " and middle != " " and middle == bottom:
             # top
             coords = [0, 0]
-        elif middle is " " and bottom is not " " and top == bottom:
+        elif middle == " " and bottom != " " and top == bottom:
             # middle
             coords = [1, 1]
             print(coords)
@@ -145,13 +145,13 @@ def two_in_a_row(board):
         middle = board[1][1]
         bottom = board[2][0]
 
-        if bottom is " " and top is not " " and top == middle:
+        if bottom == " " and top != " " and top == middle:
             # bottom
             coords = [2, 0]
-        elif top is " " and middle is not " " and middle == bottom:
+        elif top == " " and middle != " " and middle == bottom:
             # top
             coords = [0, 2]
-        elif middle is " " and bottom is not " " and top == bottom:
+        elif middle == " " and bottom != " " and top == bottom:
             # middle
             coords = [1, 1]
 
