@@ -53,9 +53,9 @@ def gameResult(board):
 def newBoard():
     """ Return a blank board """
     return [
-        ["x", " ", " "],
-        [" ", "o", " "],
-        [" ", " ", "x"]
+        ["o", " ", " "],
+        ["x", " ", "o"],
+        ["o", " ", " "]
     ]
 
 
@@ -83,6 +83,14 @@ def userTurn(board):
                     pass
 
 
+def getColumn(board, col):
+    """ Return a list of the column at the given index """
+    column = []
+    for row in board:
+        column.append(row[col])
+    return column
+
+
 def twoInARow(board):
     """ Check if there is an opportunity to win. If yes, return winning coords """
     coords = None
@@ -102,13 +110,13 @@ def twoInARow(board):
     if not coords:
         rotated_board = list(zip(*board[::-1]))
         for y in range(3):
-            row = rotated_board[y]
-            count_x = sum(1 for i in row if i == "x")
-            count_o = sum(1 for i in row if i == "o")
-            count_n = sum(1 for i in row if i == " ")
+            column = getColumn(board, y)
+            count_x = sum(1 for i in column if i == "x")
+            count_o = sum(1 for i in column if i == "o")
+            count_n = sum(1 for i in column if i == " ")
             if count_n == 1 and (count_x == 2 or count_o == 2):
                 # hit, get the coords (invert the row to get accurate coords)
-                x = row[::-1].index(" ")
+                x = column.index(" ")
                 coords = [x, y]
 
     # Diagonal: starting top left corner
@@ -117,15 +125,16 @@ def twoInARow(board):
         middle = board[1][1]
         bottom = board[2][2]
 
-        if top is not " " and top == middle:
+        if bottom is " " and top is not " " and top == middle:
             # bottom
             coords = [2, 2]
-        if middle is not " " and middle == bottom:
+        elif top is " " and middle is not " " and middle == bottom:
             # top
             coords = [0, 0]
-        elif bottom is not " " and top == bottom:
+        elif middle is " " and bottom is not " " and top == bottom:
             # middle
             coords = [1, 1]
+            print(coords)
 
     # Diagonal: tarting top right corner
     if not coords:
@@ -133,13 +142,13 @@ def twoInARow(board):
         middle = board[1][1]
         bottom = board[2][0]
 
-        if top is not " " and top == middle:
+        if bottom is " " and top is not " " and top == middle:
             # bottom
             coords = [2, 0]
-        if middle is not " " and middle == bottom:
+        elif top is " " and middle is not " " and middle == bottom:
             # top
             coords = [0, 2]
-        elif bottom is not " " and top == bottom:
+        elif  middle is " " and bottom is not " " and top == bottom:
             # middle
             coords = [1, 1]
 
@@ -151,34 +160,39 @@ def isCorner(x, y):
     return x != 1 and y != 1
 
 
+def getDiagonal(board, row, col):
+    """ Return a list of a diagonal row, starting from the given coords """
+    if [row, col] == [0,0] or [row, col] == [2, 2]:
+        return [board[0][0], board[1][1], board[2][2]]
+    elif [row, col] == [0,2] or [row, col] == [2, 0]:
+        return [board[0][2], board[1][1], board[2][0]]
+
+
 def findFork(board):
     """ Return the locations of a potential fork (or None) """
     for row in range(3):
         for col in range(3):
-            count = 0
+            x_fork_count = 0
+            o_fork_count = 0
             cell = board[row][col]
             
             if cell == " ":
-                # Check row
-                count_x = sum(1 for i in board[row] if i == "x")
-                count_o = sum(1 for i in board[row] if i == "o")
-                count_n = sum(1 for i in board[row] if i == " ")
-                if count_n == 2 and (count_x == 1 or count_o == 1):
-                    count += 1
-
-                # Check col
-                column = [board[0][col], board[1][col], board[2][col]]
-                count_x = sum(1 for i in column if i == "x")
-                count_o = sum(1 for i in column if i == "o")
-                count_n = sum(1 for i in column if i == " ")
-                if count_n == 2	and (count_x == 1 or count_o == 1):
-                    count += 1
-
-                # Check diagonal (if possible)
+                axes = [board[row], getColumn(board, col)]
                 if isCorner(row, col):
-                    pass
+                    axes.append(getDiagonal(board, row, col))
 
-                if count >= 2:
+                # Check for forks in row, col and diagonal
+                for axis in axes:
+                    # Check axis
+                    count_x = sum(1 for i in axis if i == "x")
+                    count_o = sum(1 for i in axis if i == "o")
+                    count_n = sum(1 for i in axis if i == " ")
+                    if count_n == 2 and count_o == 1:
+                        o_fork_count += 1
+                    if count_n == 2 and count_x == 1:
+                        x_fork_count += 1
+
+                if x_fork_count >= 2 or o_fork_count >= 2:
                     return [row, col]
 
     return None
