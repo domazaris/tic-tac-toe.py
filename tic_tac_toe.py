@@ -2,9 +2,10 @@
 """ Just a fun game of tic tac toe """
 
 import random
+import sys
 
 
-def printBoard(board):
+def print_board(board):
     """ Print the game board """
     rows = []
     for row in board:
@@ -12,7 +13,7 @@ def printBoard(board):
     print("\n-+-+-\n".join(rows))
 
 
-def threeInARow(board, player):
+def three_in_a_row(board, player):
     """ Return true if three of a kind are in a row """
     result = False
     for idx in range(3):
@@ -28,7 +29,7 @@ def threeInARow(board, player):
     return result
 
 
-def fullBoard(board):
+def full_board(board):
     """ Return true if board is full (draw)"""
     for row in board:
         for cell in row:
@@ -37,22 +38,22 @@ def fullBoard(board):
     return True
 
 
-def gameOver(board):
+def game_over(board):
     """ Return true if game over """
-    return threeInARow(board, "o") or threeInARow(board, "x") or fullBoard(board)
+    return three_in_a_row(board, "o") or three_in_a_row(board, "x") or full_board(board)
 
 
-def gameResult(board):
+def game_result(board):
     """ Print the winner of the game"""
-    if threeInARow(board, "o"):
+    if three_in_a_row(board, "o"):
         print("YOU WIN")
-    elif threeInARow(board, "x"):
+    elif three_in_a_row(board, "x"):
         print("YOU LOSE")
     else:
         print("It's a draw :|")
 
 
-def newBoard():
+def new_board():
     """ Return a blank board """
     return [
         [" ", " ", " "],
@@ -61,9 +62,9 @@ def newBoard():
     ]
 
 
-def userTurn(board):
+def user_turn(board):
     """ Get user input, then place """
-    printBoard(board)
+    print_board(board)
     while True:
         turn = input("Your move. Place in coords of a position e.g. 0,0: ")
         if turn:
@@ -85,7 +86,7 @@ def userTurn(board):
                     pass
 
 
-def getColumn(board, col):
+def get_column(board, col):
     """ Return a list of the column at the given index """
     column = []
     for row in board:
@@ -93,7 +94,7 @@ def getColumn(board, col):
     return column
 
 
-def twoInARow(board):
+def two_in_a_row(board):
     """ Check if there is an opportunity to win. If yes, return winning coords """
     coords = None
 
@@ -112,7 +113,7 @@ def twoInARow(board):
     if not coords:
         rotated_board = list(zip(*board[::-1]))
         for y in range(3):
-            column = getColumn(board, y)
+            column = get_column(board, y)
             count_x = sum(1 for i in column if i == "x")
             count_o = sum(1 for i in column if i == "o")
             count_n = sum(1 for i in column if i == " ")
@@ -158,12 +159,12 @@ def twoInARow(board):
     return coords
 
 
-def isCorner(x, y):
+def is_corner(x, y):
     """ Return true if corner """
     return x != 1 and y != 1
 
 
-def getDiagonal(board, row, col):
+def get_diagonal(board, row, col):
     """ Return a list of a diagonal row, starting from the given coords """
     if [row, col] == [0, 0] or [row, col] == [2, 2]:
         return [board[0][0], board[1][1], board[2][2]]
@@ -171,7 +172,7 @@ def getDiagonal(board, row, col):
         return [board[0][2], board[1][1], board[2][0]]
 
 
-def findFork(board):
+def find_fork(board):
     """ Return the locations of a potential fork (or None) """
     for row in range(3):
         for col in range(3):
@@ -180,9 +181,9 @@ def findFork(board):
             cell = board[row][col]
 
             if cell == " ":
-                axes = [board[row], getColumn(board, col)]
-                if isCorner(row, col):
-                    axes.append(getDiagonal(board, row, col))
+                axes = [board[row], get_column(board, col)]
+                if is_corner(row, col):
+                    axes.append(get_diagonal(board, row, col))
 
                 # Check for forks in row, col and diagonal
                 for axis in axes:
@@ -201,7 +202,7 @@ def findFork(board):
     return None
 
 
-def findEmptyMiddle(board):
+def find_empty_middle(board):
     """ Returns middle coords if empty """
     if board[1][1] == " ":
         return [1, 1]
@@ -209,7 +210,7 @@ def findEmptyMiddle(board):
         return None
 
 
-def findOppositeCorner(board):
+def find_opposite_corner(board):
     """ Returns coordinates if there is a blank opposite corner """
     if board[0][0] == "o" and board[2][2] == " ":
         return [2, 2]
@@ -223,7 +224,7 @@ def findOppositeCorner(board):
         return None
 
 
-def findEmptyCorner(board):
+def find_empty_corner(board):
     """ Return coords of first empty corner """
     if board[0][0] == " ":
         return [0, 0]
@@ -237,7 +238,7 @@ def findEmptyCorner(board):
         return None
 
 
-def findEmptySide(board):
+def find_empty_side(board):
     """ Return coords of first found empty side """
     if board[0][1] == " ":
         return [0, 1]
@@ -251,10 +252,10 @@ def findEmptySide(board):
         return None
 
 
-def cpuTurn(board):
+def cpu_turn(board):
     """ CPU turn in the game """
-    moves = [twoInARow, findFork, findEmptyMiddle,
-             findOppositeCorner, findEmptyCorner, findEmptySide]
+    moves = [two_in_a_row, find_fork, find_empty_middle,
+             find_opposite_corner, find_empty_corner, find_empty_side]
 
     for move in moves:
         coords = move(board)
@@ -264,23 +265,23 @@ def cpuTurn(board):
 
     # If we get here, something went wrong
     print("Uh-oh, the game broke! I refuse to lose this")
-    exit(0)
+    sys.exit(0)
 
 
 def main():
     """ Main function """
     try:
-        board = newBoard()
-        players = [userTurn, cpuTurn]
+        board = new_board()
+        players = [user_turn, cpu_turn]
         random.shuffle(players)
 
-        while not gameOver(board):
+        while not game_over(board):
             players[0](board)
-            if not gameOver(board):
+            if not game_over(board):
                 players[1](board)
 
-        printBoard(board)
-        gameResult(board)
+        print_board(board)
+        game_result(board)
     except KeyboardInterrupt:
         print("\nAlright, quitter....")
     except EOFError:
