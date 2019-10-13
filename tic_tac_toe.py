@@ -8,9 +8,12 @@ import sys
 def print_board(board):
     """ Print the game board """
     rows = []
-    for row in board:
-        rows.append("|".join(row))
-    print("\n-+-+-\n".join(rows))
+    var = 2
+    for row in board[::-1]:
+        rows.append("{}  {}".format(var, "|".join(row)))
+        var -= 1
+    print("\n   -+-+-\n".join(rows))
+    print("\n   0 1 2")
 
 
 def three_in_a_row(board, player):
@@ -64,12 +67,12 @@ def new_board():
 
 def get_user_input():
     """ Returns user input or None for invalid input """
-    turn = input("Your move. Place in coords of a position e.g. 0,0: ")
+    turn = input("Your move. Place in coords of a position e.g. x,y: ")
     if turn:
         turn = turn.split(',')
         if len(turn) == 2:
             try:
-                return [int(turn[0]), int(turn[1])]
+                return [int(turn[1]), int(turn[0])]
             except ValueError:
                 pass
     return None
